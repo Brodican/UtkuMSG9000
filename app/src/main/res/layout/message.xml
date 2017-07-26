@@ -6,6 +6,7 @@
         android:id="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/com_facebook_blue"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:textStyle="bold" />
