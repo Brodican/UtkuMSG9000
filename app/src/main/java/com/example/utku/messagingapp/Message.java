@@ -1,6 +1,5 @@
 package com.example.utku.messagingapp;
 
-import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 
@@ -14,13 +13,13 @@ public class Message {
 
     // Variables to store content, user and time of message
     private String text;
-    private String time;
+    private long time;
     private String user;
 
     public Message(String inText, String inUser) { // Constructer to initialise message
         text = inText;
         user = inUser;
-//        time = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new java.util.Date());
+        time = new Date().getTime();
     }
 
     public Message() {
@@ -31,7 +30,7 @@ public class Message {
         return text;
     }
 
-    public String getTime() {
+    public long getMsgTime() {
         return time;
     }
 
@@ -43,7 +42,7 @@ public class Message {
         text = inText;
     }
 
-    public void setTime(String inTime) {
+    public void setTime(long inTime) {
         time = inTime;
     }
 

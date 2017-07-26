@@ -2,8 +2,6 @@ package com.example.utku.messagingapp;
 
 import android.content.Context;
 import android.content.Intent;
-import android.icu.text.DateFormat;
-import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
@@ -29,8 +27,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static java.sql.DriverManager.println;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -164,13 +166,15 @@ public class MainActivity extends AppCompatActivity {
                 FirebaseDatabase.getInstance().getReference()) {
             @Override
             protected void populateView(View v, Message model, int position) {
-                TextView text = v.findViewById(R.id.message);
-//                TextView time = v.findViewById(R.id.time);
-                TextView name = v.findViewById(R.id.username);
+                TextView textTV = v.findViewById(R.id.message);
+                TextView timeTV = v.findViewById(R.id.time);
+                TextView nameTV = v.findViewById(R.id.username);
                 // TODO(1) set random colour for people
-                text.setText(model.getText());
-//                time.setText(model.getTime());
-                name.setText(model.getUser());
+                textTV.setText(model.getText());
+                nameTV.setText(model.getUser());
+
+//                timeTV.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)",
+//                        model.getMsgTime());
             }
         };
         messageList.setAdapter(mAdapter);
