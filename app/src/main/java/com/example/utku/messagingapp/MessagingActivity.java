@@ -203,10 +203,12 @@ public class MessagingActivity extends AppCompatActivity {
         return true;
     }
 
+    // displayChatMessages run in background
     public class LoadMsgBackground extends AsyncTask<String, Void, String[]> {
 
         @Override
         protected void onPreExecute() {
+            // Display loading indicator. Made invisible after all messages loaded (in displayChatMessages())
             super.onPreExecute();
             mLoadingIndicator.setVisibility(View.VISIBLE);
         }
