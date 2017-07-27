@@ -34,7 +34,7 @@ import java.util.Date;
 
 import static java.sql.DriverManager.println;
 
-public class MainActivity extends AppCompatActivity {
+public class MessagingActivity extends AppCompatActivity {
 
     /*Tag for logs*/
     private static final String TAG = "MainActivity";
@@ -69,8 +69,8 @@ public class MainActivity extends AppCompatActivity {
                         .push() // Means a key is auto-generated
                         .setValue(new Message(input.getText().toString(), // Makes Message object with message and user
                                 FirebaseAuth.getInstance()
-                        .getCurrentUser()
-                        .getDisplayName()));
+                                        .getCurrentUser()
+                                        .getDisplayName()));
                 input.setText("");
             }
         });
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                             .createSignInIntentBuilder()
                             .build(),
                     SIGN_IN_REQUEST_CODE
-                    );
+            );
         } else {
 
             /*Display toast to welcome user, since they are signed in*/
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(MainActivity.this, "Debug_Signout", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MessagingActivity.this, "Debug_Signout", Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 });
@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            Toast.makeText(MainActivity.this,
+                            Toast.makeText(MessagingActivity.this,
                                     "Signout successful",
                                     Toast.LENGTH_SHORT).show();
                             new CountDownTimer(1000, 1000) {
