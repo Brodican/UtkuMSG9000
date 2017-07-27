@@ -111,6 +111,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void debug_SignOut(View view) { testSignOut(); }
 
+    public void testIntent(View view) {
+        Log.d(TAG, "Debug test"); // Log must be in method
+        Intent intent = new Intent(this, MessagingActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

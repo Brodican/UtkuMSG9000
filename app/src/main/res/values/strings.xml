@@ -4,4 +4,5 @@
     <string name="enter_message_hint">Enter Message Here</string>
     <string name="debug_signout_button">Debug_Signout</string>
     <string name="menu_sign_out">Sign Out</string>
+    <string name="test_activity">test act</string>
 </resources>
