@@ -89,7 +89,7 @@ public class MessagingActivity extends AppCompatActivity {
         } else {
 
             /*Display toast to welcome user, since they are signed in
-            (only if savedInstanceState) is null, so user is not toasted on rotation*/
+            (only if savedInstanceState is null, so user is not toasted on rotation)*/
             if (savedInstanceState == null) {
                 Toast.makeText(this, "Come in " + FirebaseAuth
                                 .getInstance()
@@ -197,12 +197,43 @@ public class MessagingActivity extends AppCompatActivity {
                 FirebaseDatabase.getInstance().getReference()) {
             @Override
             protected void populateView(View v, Message model, int position) {
+                TextView textTVs = v.findViewById(R.id.message_self);
+//                TextView timeTVs = v.findViewById(R.id.time);
+                TextView nameTVs = v.findViewById(R.id.username_self);
+
                 TextView textTV = v.findViewById(R.id.message);
-                TextView timeTV = v.findViewById(R.id.time);
+//                TextView timeTV = v.findViewById(R.id.time);
                 TextView nameTV = v.findViewById(R.id.username);
+
+                String currentName = null;
+
+                // If the message is by the current user, message should be at right
+                try { // Name may be empty
+                    currentName = FirebaseAuth.getInstance()
+                            .getCurrentUser()
+                            .getDisplayName();
+                } catch (Exception e) {
+
+                }
+                try {
+                    if (currentName.equals(model.getUser())) { // If current user, empty left
+                        textTVs.setText(model.getText());
+                        nameTVs.setText(model.getUser());
+                        textTV.setText("");
+                        nameTV.setText("");
+
+                    } else { // Else, empty right
+                        textTV.setText(model.getText());
+                        nameTV.setText(model.getUser());
+                        textTVs.setText("");
+                        nameTVs.setText("");
+                    }
+                } catch (Exception e) { // Name may be empty
+                    textTV = v.findViewById(R.id.message);
+                    nameTV = v.findViewById(R.id.username);
+                }
+
                 // TODO(1) set random colour for people
-                textTV.setText(model.getText());
-                nameTV.setText(model.getUser());
 
 //                timeTV.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)",
 //                        model.getMsgTime());
