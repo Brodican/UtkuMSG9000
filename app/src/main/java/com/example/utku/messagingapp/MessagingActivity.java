@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +53,11 @@ public class MessagingActivity extends AppCompatActivity {
 
     private FirebaseListAdapter<Message> mAdapter;
 
+    private ProgressBar mLoadingIndicator; // Progress bar for when loading messages
+    private ListView mMessageList;
+
+    public int msgCount = 0; // Count number of messages loaded
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +66,8 @@ public class MessagingActivity extends AppCompatActivity {
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         FloatingActionButton floaterButt = (FloatingActionButton) findViewById(R.id.send_msg);
+
+        mLoadingIndicator = (ProgressBar) findViewById(R.id.loading_messages_indicator);
 
         floaterButt.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
@@ -96,10 +104,15 @@ public class MessagingActivity extends AppCompatActivity {
                                 .getCurrentUser()
                                 .getDisplayName(),
                         Toast.LENGTH_LONG).show();
+                new LoadMsgBackground().execute();
+            }
+            else {
+
+            /*AsyncTask to load chat in background*/
+                new LoadMsgBackground().execute();
+//            displayChatMessages();
             }
 
-            /*Load the chat*/
-            displayChatMessages();
         }
     }
 
@@ -124,7 +137,7 @@ public class MessagingActivity extends AppCompatActivity {
         if (requestCode == SIGN_IN_REQUEST_CODE) { // If sign in request occurs
             if (resultCode == RESULT_OK) { // If successful
                 Toast.makeText(this, "Sign in successful", Toast.LENGTH_SHORT).show();
-                displayChatMessages();
+                new LoadMsgBackground().execute();
             } else {
                 Toast.makeText(this, "Sign in unsuccessful", Toast.LENGTH_SHORT).show();
 
@@ -190,8 +203,32 @@ public class MessagingActivity extends AppCompatActivity {
         return true;
     }
 
+    public class LoadMsgBackground extends AsyncTask<String, Void, String[]> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mLoadingIndicator.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected String[] doInBackground(String... params) {
+
+            if (params.length == 0) {
+                displayChatMessages();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String[] weatherData) {
+
+        }
+    }
+
     private void displayChatMessages() {
-        ListView messageList = (ListView) findViewById(R.id.list_of_messages);
+
+        mMessageList = (ListView) findViewById(R.id.list_of_messages);
 
         mAdapter = new FirebaseListAdapter<Message>(this, Message.class, R.layout.message,
                 FirebaseDatabase.getInstance().getReference()) {
@@ -217,16 +254,20 @@ public class MessagingActivity extends AppCompatActivity {
                 }
                 try {
                     if (currentName.equals(model.getUser())) { // If current user, empty left
+                        textTVs.setVisibility(View.VISIBLE); // Change visibility so message box not seen
                         textTVs.setText(model.getText());
                         nameTVs.setText(model.getUser());
                         textTV.setText("");
                         nameTV.setText("");
+                        textTV.setVisibility(View.INVISIBLE);
 
                     } else { // Else, empty right
+                        textTV.setVisibility(View.VISIBLE);
                         textTV.setText(model.getText());
                         nameTV.setText(model.getUser());
                         textTVs.setText("");
                         nameTVs.setText("");
+                        textTVs.setVisibility(View.INVISIBLE);
                     }
                 } catch (Exception e) { // Name may be empty
                     textTV = v.findViewById(R.id.message);
@@ -237,8 +278,16 @@ public class MessagingActivity extends AppCompatActivity {
 
 //                timeTV.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)",
 //                        model.getMsgTime());
+                if (position == mAdapter.getCount()-1) {
+                    mLoadingIndicator.setVisibility(View.INVISIBLE);
+                }
             }
         };
-        messageList.setAdapter(mAdapter);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mMessageList.setAdapter(mAdapter);
+            }
+        });
     }
 }

@@ -87,4 +87,12 @@
         android:hint="@string/enter_message_hint"
         android:inputType="text" />
 
+    <ProgressBar
+        android:id="@+id/loading_messages_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/debug_sign_out"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible" />
+
 </RelativeLayout>
