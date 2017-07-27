@@ -2,6 +2,7 @@ package com.example.utku.messagingapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
@@ -27,6 +28,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.IOException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -85,12 +88,15 @@ public class MessagingActivity extends AppCompatActivity {
             );
         } else {
 
-            /*Display toast to welcome user, since they are signed in*/
-            Toast.makeText(this, "Come in " + FirebaseAuth
-                            .getInstance()
-                            .getCurrentUser()
-                            .getDisplayName(),
-                    Toast.LENGTH_LONG).show();
+            /*Display toast to welcome user, since they are signed in
+            (only if savedInstanceState) is null, so user is not toasted on rotation*/
+            if (savedInstanceState == null) {
+                Toast.makeText(this, "Come in " + FirebaseAuth
+                                .getInstance()
+                                .getCurrentUser()
+                                .getDisplayName(),
+                        Toast.LENGTH_LONG).show();
+            }
 
             /*Load the chat*/
             displayChatMessages();
@@ -111,12 +117,6 @@ public class MessagingActivity extends AppCompatActivity {
 
     public void debug_SignOut(View view) { testSignOut(); }
 
-    public void testIntent(View view) {
-        Log.d(TAG, "Debug test"); // Log must be in method
-        Intent intent = new Intent(this, MessagingActivity.class);
-        startActivity(intent);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -132,6 +132,31 @@ public class MessagingActivity extends AppCompatActivity {
             }
         }
     }
+
+//    public class GithubQueryTask extends AsyncTask<String, Void, String> {
+//
+////        @Override
+////        protected String doInBackground(String... strings) {
+////            return null;
+////        }
+////
+////        @Override
+////        protected void onPreExecute() {
+////            super.onPreExecute();
+////            mLoadingIndicator.setVisibility(View.VISIBLE);
+////        }
+////
+////        @Override
+////        protected void onPostExecute(String githubSearchResults) {
+////            mLoadingIndicator.setVisibility(View.INVISIBLE);
+////            if (githubSearchResults != null && !githubSearchResults.equals("")) {
+////                showJsonDataView();
+////                mSearchResultsTextView.setText(githubSearchResults);
+////            } else {
+////                showErrorMessage();
+////            }
+////        }
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
