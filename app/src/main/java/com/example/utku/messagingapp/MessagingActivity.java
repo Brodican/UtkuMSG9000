@@ -2,9 +2,11 @@ package com.example.utku.messagingapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.CountDownTimer;
+import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
@@ -15,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -55,6 +58,7 @@ public class MessagingActivity extends AppCompatActivity {
 
     private ProgressBar mLoadingIndicator; // Progress bar for when loading messages
     private ListView mMessageList;
+    private ImageView mTestImage;
 
     public int msgCount = 0; // Count number of messages loaded
 
@@ -68,6 +72,15 @@ public class MessagingActivity extends AppCompatActivity {
         FloatingActionButton floaterButt = (FloatingActionButton) findViewById(R.id.send_msg);
 
         mLoadingIndicator = (ProgressBar) findViewById(R.id.loading_messages_indicator);
+
+        mTestImage = (ImageView) findViewById(R.id.test_getImage);
+
+        if (getIntent().hasExtra(PickActivity.MESSAGE_EXTRA)) { // Check if extra with the message code exists
+            // Get string uri from intent, parse into Uri
+            Uri imageUri = Uri.parse(getIntent().getStringExtra(PickActivity.MESSAGE_EXTRA));
+            
+            mTestImage.setImageURI(imageUri);
+        }
 
         floaterButt.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)

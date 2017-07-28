@@ -12,6 +12,7 @@ import android.widget.ImageView;
 public class PickActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE = 100;
+    public static final String MESSAGE_EXTRA = "Send";
     private ImageView imageView;
 
     @Override
@@ -42,8 +43,10 @@ public class PickActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == PICK_IMAGE) {
             Uri imageUri = data.getData();
-            imageView.setImageURI(imageUri);
-            finish();
+//            imageView.setImageURI(imageUri);
+            Intent intent = new Intent(this, MessagingActivity.class);
+            intent.putExtra(MESSAGE_EXTRA, imageUri.toString());
+            startActivity(intent);
         }
     }
 }

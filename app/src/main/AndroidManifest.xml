@@ -36,6 +36,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MessagingActivity" />
         </activity>
+        <activity android:name=".FireBaseImage"></activity>
     </application>
 
 </manifest>

@@ -75,7 +75,7 @@
 
     <EditText
         android:id="@+id/text_input"
-        android:layout_width="250dp"
+        android:layout_width="270dp"
         android:layout_height="42dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
@@ -101,11 +101,16 @@
         android:layout_height="40dp"
         android:background="@android:drawable/ic_menu_upload"
         android:onClick="attachFile"
-        android:layout_marginLeft="19dp"
-        android:layout_marginStart="19dp"
-        android:layout_alignBaseline="@+id/text_input"
-        android:layout_alignBottom="@+id/text_input"
-        android:layout_toRightOf="@+id/debug_sign_out"
-        android:layout_toEndOf="@+id/debug_sign_out" />
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/send_msg"
+        android:layout_toStartOf="@+id/send_msg" />
+
+    <ImageView
+        android:id="@+id/test_getImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:srcCompat="@drawable/com_facebook_auth_dialog_background"
+        android:layout_above="@+id/debug_sign_out"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
