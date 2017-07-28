@@ -78,7 +78,7 @@ public class MessagingActivity extends AppCompatActivity {
         if (getIntent().hasExtra(PickActivity.MESSAGE_EXTRA)) { // Check if extra with the message code exists
             // Get string uri from intent, parse into Uri
             Uri imageUri = Uri.parse(getIntent().getStringExtra(PickActivity.MESSAGE_EXTRA));
-            
+
             mTestImage.setImageURI(imageUri);
         }
 
@@ -136,7 +136,9 @@ public class MessagingActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         Toast.makeText(MessagingActivity.this, "Debug_Signout", Toast.LENGTH_SHORT).show();
-                        finish();
+                        // Go to MainActivity rather than PickActivity on sign-out
+                        Intent intent = new Intent(MessagingActivity.this, MainActivity.class);
+                        startActivity(intent);
                     }
                 });
     }
