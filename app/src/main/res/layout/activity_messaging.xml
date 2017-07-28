@@ -75,7 +75,7 @@
 
     <EditText
         android:id="@+id/text_input"
-        android:layout_width="match_parent"
+        android:layout_width="250dp"
         android:layout_height="42dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
@@ -94,5 +94,18 @@
         android:visibility="invisible"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/attach_file_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@android:drawable/ic_menu_upload"
+        android:onClick="attachFile"
+        android:layout_marginLeft="19dp"
+        android:layout_marginStart="19dp"
+        android:layout_alignBaseline="@+id/text_input"
+        android:layout_alignBottom="@+id/text_input"
+        android:layout_toRightOf="@+id/debug_sign_out"
+        android:layout_toEndOf="@+id/debug_sign_out" />
 
 </RelativeLayout>

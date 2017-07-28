@@ -292,4 +292,11 @@ public class MessagingActivity extends AppCompatActivity {
             }
         });
     }
+
+    // Button methods
+
+    public void attachFile(View view) {
+        Intent intent = new Intent(this, PickActivity.class);
+        startActivity(intent);
+    }
 }
