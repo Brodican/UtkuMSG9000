@@ -58,6 +58,14 @@
         android:layout_alignBottom="@+id/username"
         android:layout_alignParentEnd="true"/>
 
+    <ImageView
+        android:id="@+id/downloaded_IV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:paddingLeft="5dp"
+        android:layout_alignParentTop="true"/>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

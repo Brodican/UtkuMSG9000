@@ -60,7 +60,10 @@
         android:stackFromBottom="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/send_msg" />
+
+
 
     <Button
         android:id="@+id/debug_sign_out"
