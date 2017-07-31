@@ -27,8 +27,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseListAdapter;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -80,7 +82,7 @@ public class MessagingActivity extends AppCompatActivity {
 
     private Uri imageUri;
 
-    public static Uri downloadUrl = null;
+    public static String downloadUrl = null;
     public static Uri tDownloadUrl = null;
 
     public int msgCount = 0; // Count number of messages loaded
@@ -101,6 +103,9 @@ public class MessagingActivity extends AppCompatActivity {
         // Make image invisible until just before upload
         mTestImage.setVisibility(View.INVISIBLE);
 
+        // Make downloadUrl null so upload is not attempted
+        downloadUrl = null;
+
         if (getIntent().hasExtra(PickActivity.MESSAGE_EXTRA)) { // Check if extra with the message code exists
             // Get string uri from intent, parse into Uri
             imageUri = Uri.parse(getIntent().getStringExtra(PickActivity.MESSAGE_EXTRA));
@@ -115,23 +120,9 @@ public class MessagingActivity extends AppCompatActivity {
             public void onClick(View view) {
                 // Get the EditText View from its ID
                 EditText input = (EditText) findViewById(R.id.text_input);
-                // Attempt to upload file (if image is picked)
-                uploadFile();
-                if((downloadUrl != tDownloadUrl) && (downloadUrl != null)) {
-                    // Make tDownloadUrl equal to downloadUrl, so another downloadUrl must be made
-                    // before anything else is uploaded
-                    tDownloadUrl = downloadUrl;
-                    FirebaseDatabase.getInstance()
-                            .getReference()
-                            .push() // Means a key is auto-generated
-                            .setValue(new Message(input.getText().toString(), // Makes Message object with message and user
-                                    FirebaseAuth.getInstance()
-                                            .getCurrentUser()
-                                            .getDisplayName(),
-                                    downloadUrl.toString()));
-                    Log.i(TAG, "Download Uri is: " + downloadUrl.toString());
-                    mTestImage.setVisibility(View.INVISIBLE); // Make mTestImage invisible after upload is complete
-                    input.setText("");
+                if(mTestImage.getVisibility() == View.VISIBLE) {
+                    // Attempt to upload file (if image is picked)
+                    uploadFile();
                 }
                 else {
                     FirebaseDatabase.getInstance()
@@ -141,6 +132,7 @@ public class MessagingActivity extends AppCompatActivity {
                                     FirebaseAuth.getInstance()
                                             .getCurrentUser()
                                             .getDisplayName()));
+                    Log.i(TAG, "Download Uri (non-download message made) is: " + downloadUrl);
                     input.setText("");
                 }
             }
@@ -304,11 +296,13 @@ public class MessagingActivity extends AppCompatActivity {
 //                TextView timeTVs = v.findViewById(R.id.time);
                 TextView nameTVs = v.findViewById(R.id.username_self);
 
-                ImageView imageIVs = v.findViewById(R.id.downloaded_IV);
+                ImageView imageIVs = v.findViewById(R.id.downloaded_IV_self);
 
                 TextView textTV = v.findViewById(R.id.message);
 //                TextView timeTV = v.findViewById(R.id.time);
                 TextView nameTV = v.findViewById(R.id.username);
+
+                ImageView imageIV = v.findViewById(R.id.downloaded_IV);
 
                 String currentName = null;
 
@@ -326,8 +320,13 @@ public class MessagingActivity extends AppCompatActivity {
                         textTVs.setText(model.getText());
                         nameTVs.setText(model.getUser());
                         if (model.getDownloadUrl() != null) {
+                            String httpsString = model.getDownloadUrl();
+                            downloadFile(httpsString, imageIVs);
                             imageIVs.setVisibility(View.VISIBLE);
                             textTVs.setText("HasUrl");
+                        }
+                        else {
+                            imageIVs.setVisibility(View.INVISIBLE);
                         }
                         textTV.setText("");
                         nameTV.setText("");
@@ -337,6 +336,12 @@ public class MessagingActivity extends AppCompatActivity {
                         textTV.setVisibility(View.VISIBLE);
                         textTV.setText(model.getText());
                         nameTV.setText(model.getUser());
+                        if (model.getDownloadUrl() != null) {
+                            String httpsString = model.getDownloadUrl();
+                            downloadFile(httpsString, imageIV);
+                            imageIV.setVisibility(View.VISIBLE);
+                            textTVs.setText("HasUrl");
+                        }
                         textTVs.setText("");
                         nameTVs.setText("");
                         textTVs.setVisibility(View.INVISIBLE);
@@ -402,13 +407,40 @@ public class MessagingActivity extends AppCompatActivity {
                 Log.i(TAG, "upload successful");
                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                 @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl(); // Unnecessary warning occurs
-                MessagingActivity.setDownloadUrl(downloadUrl);
+                Log.i(TAG, "DownloadUrl direct: " + downloadUrl.toString());
+                mTestImage.setVisibility(View.INVISIBLE); // Set TestImage to invisible so there is not another upload until another image is picked
+                MessagingActivity.setDownloadUrl(downloadUrl.toString());
+                EditText input = (EditText) findViewById(R.id.text_input);
+                FirebaseDatabase.getInstance()
+                        .getReference()
+                        .push() // Means a key is auto-generated
+                        .setValue(new Message(input.getText().toString(), // Makes Message object with message and user
+                                FirebaseAuth.getInstance()
+                                        .getCurrentUser()
+                                        .getDisplayName(),
+                                downloadUrl.toString()));
+                Log.i(TAG, "Download Uri (message made) is: " + downloadUrl);
+                mTestImage.setVisibility(View.INVISIBLE); // Make mTestImage invisible after upload is complete
+                input.setText("");
             }
         });
     }
 
-    public static void setDownloadUrl(Uri inUri) {
-        downloadUrl = inUri;
+    public void downloadFile(String httpsString, ImageView imageView) {
+        Uri refUri = Uri.parse(httpsString);
+        StorageReference httpsReference = storage.getReferenceFromUrl(httpsString);
+        Log.i(TAG, "Download String from downloadFile()" + httpsString);
+
+        imageView.setVisibility(View.VISIBLE);
+        // Load the image using Glide
+        Glide.with(this /* context */)
+                .using(new FirebaseImageLoader())
+                .load(httpsReference)
+                .into(imageView);
+    }
+
+    public static void setDownloadUrl(String inUrl) {
+        downloadUrl = inUrl;
     }
 
     private String getRealPathFromURI(Uri contentURI) { // Used to get path to file from its Uri

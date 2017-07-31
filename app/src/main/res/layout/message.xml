@@ -60,10 +60,20 @@
 
     <ImageView
         android:id="@+id/downloaded_IV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
-        android:paddingLeft="5dp"
+        android:layout_width="300dp"
+        android:layout_height="150dp"
+        android:visibility="visible"
+        android:layout_below="@+id/username"
+        android:paddingLeft="50dp"
+        android:layout_alignParentTop="true"/>
+
+    <ImageView
+        android:id="@+id/downloaded_IV_self"
+        android:layout_width="300dp"
+        android:layout_height="150dp"
+        android:visibility="visible"
+        android:layout_below="@+id/username_self"
+        android:paddingRight="50dp"
         android:layout_alignParentTop="true"/>
 
     <View
