@@ -1,27 +1,41 @@
 package com.example.utku.messagingapp;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Point;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.CountDownTimer;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -31,6 +45,7 @@ import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.github.chrisbanes.photoview.PhotoView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -83,9 +98,9 @@ public class MessagingActivity extends AppCompatActivity {
     private Uri imageUri;
 
     public static String downloadUrl = null;
-    public static Uri tDownloadUrl = null;
 
-    public int msgCount = 0; // Count number of messages loaded
+    // Keeps track of whether file is being uploaded, so button may not be pressed again while file is uploading
+    public boolean letButtonBePressed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +121,8 @@ public class MessagingActivity extends AppCompatActivity {
         // Make downloadUrl null so upload is not attempted
         downloadUrl = null;
 
+        letButtonBePressed = true;
+
         if (getIntent().hasExtra(PickActivity.MESSAGE_EXTRA)) { // Check if extra with the message code exists
             // Get string uri from intent, parse into Uri
             imageUri = Uri.parse(getIntent().getStringExtra(PickActivity.MESSAGE_EXTRA));
@@ -118,22 +135,33 @@ public class MessagingActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
-                // Get the EditText View from its ID
-                EditText input = (EditText) findViewById(R.id.text_input);
-                if(mTestImage.getVisibility() == View.VISIBLE) {
-                    // Attempt to upload file (if image is picked)
-                    uploadFile();
-                }
-                else {
-                    FirebaseDatabase.getInstance()
-                            .getReference()
-                            .push() // Means a key is auto-generated
-                            .setValue(new Message(input.getText().toString(), // Makes Message object with message and user
-                                    FirebaseAuth.getInstance()
-                                            .getCurrentUser()
-                                            .getDisplayName()));
-                    Log.i(TAG, "Download Uri (non-download message made) is: " + downloadUrl);
-                    input.setText("");
+                if (letButtonBePressed) { //  Only execute if upload is not occuring
+                    // Get the EditText View from its ID
+                    EditText input = (EditText) findViewById(R.id.text_input);
+                    String ed_string = input.getText().toString().trim(); // For checking if the input is empty
+                    // Check if input is empty
+                    if (!(ed_string.isEmpty() || ed_string.length() == 0 || ed_string.equals("") || ed_string == null)) {
+                        Log.d(TAG, "Not empty bleddy");
+                        if (mTestImage.getVisibility() == View.VISIBLE) {
+                            // Attempt to upload file (if image is picked)
+                            uploadFile();
+                        } else {
+                            FirebaseDatabase.getInstance()
+                                    .getReference()
+                                    .push() // Means a key is auto-generated
+                                    .setValue(new Message(input.getText().toString(), // Makes Message object with message and user
+                                            FirebaseAuth.getInstance()
+                                                    .getCurrentUser()
+                                                    .getDisplayName()));
+                            Log.i(TAG, "Download Uri (non-download message made) is: " + downloadUrl);
+                            input.setText("");
+                        }
+                    }
+                    else {
+                        Toast.makeText(MessagingActivity.this,
+                                "Input text fam",
+                                Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         });
@@ -153,7 +181,7 @@ public class MessagingActivity extends AppCompatActivity {
             /*Display toast to welcome user, since they are signed in
             (only if savedInstanceState is null, so user is not toasted on rotation)*/
             if (savedInstanceState == null) {
-                Toast.makeText(this, "Come in " + FirebaseAuth
+                Toast.makeText(this, "Thy ist insert " + FirebaseAuth
                                 .getInstance()
                                 .getCurrentUser()
                                 .getDisplayName(),
@@ -230,6 +258,9 @@ public class MessagingActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
+        // Don't show back button, user should sign out to leave
+        ActionBar supActionBar = getSupportActionBar();
+        supActionBar.setDisplayHomeAsUpEnabled(false);
         return true;
     }
 
@@ -247,7 +278,8 @@ public class MessagingActivity extends AppCompatActivity {
                                 public void onFinish() {
                                     // When timer is finished
                                     // Execute your code here
-                                    finish();
+                                    Intent intent = new Intent(MessagingActivity.this, MainActivity.class);
+                                    startActivity(intent);
                                 }
                                 public void onTick(long millisUntilFinished) {
                                     // millisUntilFinished    The amount of time until finished.
@@ -284,6 +316,19 @@ public class MessagingActivity extends AppCompatActivity {
         }
     }
 
+    public void enlargeView(View view) {
+        Log.d(TAG, "Called");
+        ImageView testImage;
+        Drawable drawable = ((PhotoView) view).getDrawable();
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.test_dialog, null);
+        ((PhotoView) dialogView.findViewById(R.id.enlarged_image)).setImageDrawable(drawable);
+        dialogBuilder.setView(dialogView);
+        AlertDialog alertDialog = dialogBuilder.create();
+        alertDialog.show();
+    }
+
     private void displayChatMessages() {
 
         mMessageList = (ListView) findViewById(R.id.list_of_messages);
@@ -296,13 +341,13 @@ public class MessagingActivity extends AppCompatActivity {
 //                TextView timeTVs = v.findViewById(R.id.time);
                 TextView nameTVs = v.findViewById(R.id.username_self);
 
-                ImageView imageIVs = v.findViewById(R.id.downloaded_IV_self);
+                PhotoView imagePVs = v.findViewById(R.id.downloaded_PV_self);
 
                 TextView textTV = v.findViewById(R.id.message);
 //                TextView timeTV = v.findViewById(R.id.time);
                 TextView nameTV = v.findViewById(R.id.username);
 
-                ImageView imageIV = v.findViewById(R.id.downloaded_IV);
+                PhotoView imagePV = v.findViewById(R.id.downloaded_PV);
 
                 String currentName = null;
 
@@ -321,15 +366,30 @@ public class MessagingActivity extends AppCompatActivity {
                         nameTVs.setText(model.getUser());
                         if (model.getDownloadUrl() != null) {
                             String httpsString = model.getDownloadUrl();
-                            downloadFile(httpsString, imageIVs);
-                            imageIVs.setVisibility(View.VISIBLE);
-                            textTVs.setText("HasUrl");
+                            downloadFile(httpsString, imagePVs);
+                            imagePVs.setVisibility(View.VISIBLE);
+//                            textTVs.setText("HasUrl");
+
+                            imagePVs.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    enlargeView(view);
+                                }
+                            });
+
+//                            AppBarLayout.LayoutParams layoutParams = (AppBarLayout.LayoutParams) imagePVs.getLayoutParams();
+//                            layoutParams.height = 1000;
+//                            layoutParams.width = 1000;
                         }
                         else {
-                            imageIVs.setVisibility(View.INVISIBLE);
+                            imagePVs.setVisibility(View.INVISIBLE);
+//                            AppBarLayout.LayoutParams layoutParams = (AppBarLayout.LayoutParams) imagePVs.getLayoutParams();
+//                            layoutParams.width = 1;
+//                            layoutParams.height = 1;
                         }
                         textTV.setText("");
                         nameTV.setText("");
+                        imagePV.setImageResource(R.drawable.empty_drawable);
                         textTV.setVisibility(View.INVISIBLE);
 
                     } else { // Else, empty right
@@ -338,12 +398,23 @@ public class MessagingActivity extends AppCompatActivity {
                         nameTV.setText(model.getUser());
                         if (model.getDownloadUrl() != null) {
                             String httpsString = model.getDownloadUrl();
-                            downloadFile(httpsString, imageIV);
-                            imageIV.setVisibility(View.VISIBLE);
-                            textTVs.setText("HasUrl");
+                            downloadFile(httpsString, imagePV);
+                            imagePV.setVisibility(View.VISIBLE);
+//                            textTVs.setText("HasUrl");
+//
+//                            AppBarLayout.LayoutParams layoutParams = (AppBarLayout.LayoutParams) imagePVs.getLayoutParams();
+//                            layoutParams.height = 1000;
+//                            layoutParams.width = 1000;
+                        }
+                        else {
+                            imagePV.setVisibility(View.INVISIBLE);
+//                            AppBarLayout.LayoutParams layoutParams = (AppBarLayout.LayoutParams) imagePV.getLayoutParams();
+//                            layoutParams.width = 1;
+//                            layoutParams.height = 1;
                         }
                         textTVs.setText("");
                         nameTVs.setText("");
+                        imagePVs.setImageResource(R.drawable.empty_drawable);
                         textTVs.setVisibility(View.INVISIBLE);
                     }
                 } catch (Exception e) { // Name may be empty
@@ -376,6 +447,8 @@ public class MessagingActivity extends AppCompatActivity {
     }
 
     public void uploadFile() {
+
+        letButtonBePressed = false; // Don't let the send button be pressed if an upload is occurring
 
         ImageView imageView = mTestImage;
 
@@ -422,21 +495,22 @@ public class MessagingActivity extends AppCompatActivity {
                 Log.i(TAG, "Download Uri (message made) is: " + downloadUrl);
                 mTestImage.setVisibility(View.INVISIBLE); // Make mTestImage invisible after upload is complete
                 input.setText("");
+                letButtonBePressed = true;
             }
         });
     }
 
-    public void downloadFile(String httpsString, ImageView imageView) {
-        Uri refUri = Uri.parse(httpsString);
+    public void downloadFile(String httpsString, PhotoView photoView) {
+
         StorageReference httpsReference = storage.getReferenceFromUrl(httpsString);
         Log.i(TAG, "Download String from downloadFile()" + httpsString);
 
-        imageView.setVisibility(View.VISIBLE);
+        photoView.setVisibility(View.VISIBLE);
         // Load the image using Glide
         Glide.with(this /* context */)
                 .using(new FirebaseImageLoader())
                 .load(httpsReference)
-                .into(imageView);
+                .into(photoView);
     }
 
     public static void setDownloadUrl(String inUrl) {

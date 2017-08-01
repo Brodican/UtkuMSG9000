@@ -58,23 +58,41 @@
         android:layout_alignBottom="@+id/username"
         android:layout_alignParentEnd="true"/>
 
-    <ImageView
-        android:id="@+id/downloaded_IV"
-        android:layout_width="300dp"
-        android:layout_height="150dp"
-        android:visibility="visible"
-        android:layout_below="@+id/username"
-        android:paddingLeft="50dp"
-        android:layout_alignParentTop="true"/>
+    <!--<ImageView-->
+        <!--android:id="@+id/downloaded_IV"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:visibility="visible"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:paddingStart="50dp"-->
+        <!--android:layout_alignParentTop="true"/>-->
 
-    <ImageView
-        android:id="@+id/downloaded_IV_self"
-        android:layout_width="300dp"
-        android:layout_height="150dp"
+    <!--<ImageView-->
+        <!--android:id="@+id/downloaded_IV_self"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:visibility="visible"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:paddingEnd="50dp"-->
+        <!--android:layout_alignParentTop="true"/>-->
+
+    <com.github.chrisbanes.photoview.PhotoView
+        android:id="@+id/downloaded_PV"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:visibility="visible"
-        android:layout_below="@+id/username_self"
-        android:paddingRight="50dp"
-        android:layout_alignParentTop="true"/>
+        android:layout_centerHorizontal="true"
+        android:paddingEnd="50dp"
+        android:layout_alignParentTop="true" />
+
+    <com.github.chrisbanes.photoview.PhotoView
+        android:id="@+id/downloaded_PV_self"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:visibility="visible"
+        android:layout_centerHorizontal="true"
+        android:paddingStart="50dp"
+        android:layout_alignParentTop="true" />
 
     <View
         android:layout_width="match_parent"

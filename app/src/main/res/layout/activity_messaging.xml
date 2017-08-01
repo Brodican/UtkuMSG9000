@@ -64,17 +64,16 @@
         android:layout_above="@+id/send_msg" />
 
 
-
     <Button
         android:id="@+id/debug_sign_out"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="debug_SignOut"
-        android:text="@string/debug_signout_button"
         android:layout_above="@+id/loading_messages_indicator"
-        android:layout_alignRight="@+id/version_indicator"
         android:layout_alignEnd="@+id/version_indicator"
-        android:layout_marginBottom="27dp" />
+        android:layout_alignRight="@+id/version_indicator"
+        android:layout_marginBottom="27dp"
+        android:text="@string/debug_signout_button"
+        android:visibility="invisible" />
 
     <EditText
         android:id="@+id/text_input"
@@ -104,7 +103,8 @@
         android:layout_height="40dp"
         android:background="@android:drawable/ic_menu_upload"
         android:onClick="attachFile"
-        android:layout_alignParentBottom="true"
+        android:layout_alignBaseline="@+id/text_input"
+        android:layout_alignBottom="@+id/text_input"
         android:layout_toLeftOf="@+id/send_msg"
         android:layout_toStartOf="@+id/send_msg" />
 
@@ -115,6 +115,13 @@
         android:visibility="invisible"
         app:srcCompat="@drawable/com_facebook_auth_dialog_background"
         android:layout_above="@+id/debug_sign_out"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:id="@+id/enlarged_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

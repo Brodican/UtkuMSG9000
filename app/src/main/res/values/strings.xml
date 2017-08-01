@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">UtkuMSG9000</string>
-    <string name="messaging_title_alpha">Messager Alpha 0.02</string>
+    <string name="messaging_title_alpha">Messager Alpha 0.03</string>
     <string name="enter_message_hint">Enter Message Here</string>
     <string name="debug_signout_button">Debug_Signout</string>
     <string name="menu_sign_out">Sign Out</string>
