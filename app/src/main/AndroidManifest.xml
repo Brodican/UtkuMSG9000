@@ -29,6 +29,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
+        <activity
+            android:name=".PickActivity"
+            android:parentActivityName=".MessagingActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MessagingActivity" />
+        </activity>
+        <activity android:name=".FireBaseImage"></activity>
     </application>
 
 </manifest>

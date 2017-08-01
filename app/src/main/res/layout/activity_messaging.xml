@@ -54,28 +54,31 @@
         style="@style/Widget.AppCompat.Light.ListView.DropDown"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/send_msg"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
         android:divider="@android:color/transparent"
         android:dividerHeight="16dp"
         android:transcriptMode="alwaysScroll"
-        android:stackFromBottom="true" />
+        android:stackFromBottom="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/send_msg" />
+
+
 
     <Button
         android:id="@+id/debug_sign_out"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/send_msg"
-        android:layout_toStartOf="@+id/send_msg"
         android:onClick="debug_SignOut"
-        android:text="@string/debug_signout_button" />
+        android:text="@string/debug_signout_button"
+        android:layout_above="@+id/loading_messages_indicator"
+        android:layout_alignRight="@+id/version_indicator"
+        android:layout_alignEnd="@+id/version_indicator"
+        android:layout_marginBottom="27dp" />
 
     <EditText
         android:id="@+id/text_input"
-        android:layout_width="match_parent"
+        android:layout_width="270dp"
         android:layout_height="42dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
@@ -86,5 +89,32 @@
         android:elevation="0dp"
         android:hint="@string/enter_message_hint"
         android:inputType="text" />
+
+    <ProgressBar
+        android:id="@+id/loading_messages_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/attach_file_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@android:drawable/ic_menu_upload"
+        android:onClick="attachFile"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/send_msg"
+        android:layout_toStartOf="@+id/send_msg" />
+
+    <ImageView
+        android:id="@+id/test_getImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:visibility="invisible"
+        app:srcCompat="@drawable/com_facebook_auth_dialog_background"
+        android:layout_above="@+id/debug_sign_out"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "440940309945",
-    "firebase_url": "https://messagingapp-5c024.firebaseio.com",
-    "project_id": "messagingapp-5c024",
-    "storage_bucket": "messagingapp-5c024.appspot.com"
+    "project_number": "850759214019",
+    "firebase_url": "https://utkumsg9000.firebaseio.com",
+    "project_id": "utkumsg9000",
+    "storage_bucket": "utkumsg9000.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:440940309945:android:279769af4a3bbd60",
+        "mobilesdk_app_id": "1:850759214019:android:279769af4a3bbd60",
         "android_client_info": {
           "package_name": "com.example.utku.messagingapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "440940309945-5cang7imtnf507vegl1t84t0qar7s2m4.apps.googleusercontent.com",
+          "client_id": "850759214019-ed0i5ci9no4uso023kd6ri6f8t0h8fa9.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.utku.messagingapp",
@@ -23,13 +23,13 @@
           }
         },
         {
-          "client_id": "440940309945-gc130njhd07d35bpllktsrt5n5v99n1k.apps.googleusercontent.com",
+          "client_id": "850759214019-3qppbae601b9ca66cs5uoh446hl4kv46.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDZf4Yciu66xBsgPyP_k6RIsxe76Aw4n0E"
+          "current_key": "AIzaSyBpPBIh6FYthf6Bg5jxbU-mks5yTGZ1npM"
         }
       ],
       "services": {
@@ -40,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "440940309945-gc130njhd07d35bpllktsrt5n5v99n1k.apps.googleusercontent.com",
+              "client_id": "850759214019-3qppbae601b9ca66cs5uoh446hl4kv46.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
