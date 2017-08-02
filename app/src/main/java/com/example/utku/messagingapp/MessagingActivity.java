@@ -223,11 +223,17 @@ public class MessagingActivity extends AppCompatActivity {
 
         if (requestCode == SIGN_IN_REQUEST_CODE) { // If sign in request occurs
             if (resultCode == RESULT_OK) { // If successful
-                Toast.makeText(this, "Sign in successful", Toast.LENGTH_SHORT).show();
-                new LoadMsgBackground().execute();
+
+                if (FirebaseAuth.getInstance().getCurrentUser().getDisplayName() == null) {
+                    Toast.makeText(this, "Account created, please log in", Toast.LENGTH_LONG).show();
+                    testSignOut();
+                }
+                else {
+                    Toast.makeText(this, "Sign in successful", Toast.LENGTH_SHORT).show();
+                    new LoadMsgBackground().execute();
+                }
             } else {
                 Toast.makeText(this, "Sign in unsuccessful", Toast.LENGTH_SHORT).show();
-
                 finish(); // Quit app when unsuccessful
             }
         }
