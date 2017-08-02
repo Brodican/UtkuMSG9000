@@ -141,6 +141,10 @@ public class MainActivity extends AppCompatActivity {
         logAndAppend(ON_CREATE);
     }
 
+    public void moButton(View view) {
+        Toast.makeText(this, "ur mum", Toast.LENGTH_LONG).show();
+    }
+
     /**
      * Called when the activity is becoming visible to the user.
      *

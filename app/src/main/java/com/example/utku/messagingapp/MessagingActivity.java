@@ -153,7 +153,10 @@ public class MessagingActivity extends AppCompatActivity {
                                             FirebaseAuth.getInstance()
                                                     .getCurrentUser()
                                                     .getDisplayName()));
-                            Log.i(TAG, "Download Uri (non-download message made) is: " + downloadUrl);
+                            Log.i(TAG, "Name of user creating message: " + FirebaseAuth
+                            .getInstance()
+                            .getCurrentUser()
+                            .getDisplayName());
                             input.setText("");
                         }
                     }
@@ -181,7 +184,7 @@ public class MessagingActivity extends AppCompatActivity {
             /*Display toast to welcome user, since they are signed in
             (only if savedInstanceState is null, so user is not toasted on rotation)*/
             if (savedInstanceState == null) {
-                Toast.makeText(this, "Thy ist insert " + FirebaseAuth
+                Toast.makeText(this, "Thy ist inserted " + FirebaseAuth
                                 .getInstance()
                                 .getCurrentUser()
                                 .getDisplayName(),
@@ -338,16 +341,20 @@ public class MessagingActivity extends AppCompatActivity {
             @Override
             protected void populateView(View v, Message model, int position) {
                 TextView textTVs = v.findViewById(R.id.message_self);
-//                TextView timeTVs = v.findViewById(R.id.time);
+                TextView timeTVs = v.findViewById(R.id.time_self);
                 TextView nameTVs = v.findViewById(R.id.username_self);
 
                 PhotoView imagePVs = v.findViewById(R.id.downloaded_PV_self);
 
+                ImageView backIVs = v.findViewById(R.id.message_self_background);
+
                 TextView textTV = v.findViewById(R.id.message);
-//                TextView timeTV = v.findViewById(R.id.time);
+                TextView timeTV = v.findViewById(R.id.time);
                 TextView nameTV = v.findViewById(R.id.username);
 
                 PhotoView imagePV = v.findViewById(R.id.downloaded_PV);
+
+                ImageView backIV = v.findViewById(R.id.message_background);
 
                 String currentName = null;
 
@@ -363,12 +370,16 @@ public class MessagingActivity extends AppCompatActivity {
                     if (currentName.equals(model.getUser())) { // If current user, empty left
                         textTVs.setVisibility(View.VISIBLE); // Change visibility so message box not seen
                         textTVs.setText(model.getText());
+                        DateFormat df = new SimpleDateFormat("yyyy-MM-dd-HHmm");
+                        String fmm = df.format(new java.util.Date(model.getMsgTime()));
+                        Log.d(TAG, "Time is: " + fmm);
+                        timeTVs.setText(fmm);
                         nameTVs.setText(model.getUser());
+                        backIVs.setVisibility(View.VISIBLE);
                         if (model.getDownloadUrl() != null) {
                             String httpsString = model.getDownloadUrl();
                             downloadFile(httpsString, imagePVs);
                             imagePVs.setVisibility(View.VISIBLE);
-//                            textTVs.setText("HasUrl");
 
                             imagePVs.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -376,46 +387,46 @@ public class MessagingActivity extends AppCompatActivity {
                                     enlargeView(view);
                                 }
                             });
-
-//                            AppBarLayout.LayoutParams layoutParams = (AppBarLayout.LayoutParams) imagePVs.getLayoutParams();
-//                            layoutParams.height = 1000;
-//                            layoutParams.width = 1000;
                         }
                         else {
                             imagePVs.setVisibility(View.INVISIBLE);
-//                            AppBarLayout.LayoutParams layoutParams = (AppBarLayout.LayoutParams) imagePVs.getLayoutParams();
-//                            layoutParams.width = 1;
-//                            layoutParams.height = 1;
                         }
                         textTV.setText("");
                         nameTV.setText("");
+                        timeTV.setText("");
                         imagePV.setImageResource(R.drawable.empty_drawable);
-                        textTV.setVisibility(View.INVISIBLE);
+//                        textTV.setVisibility(View.INVISIBLE);
+                        backIV.setImageResource(R.drawable.empty_drawable);
+                        backIV.setVisibility(View.INVISIBLE);
 
                     } else { // Else, empty right
                         textTV.setVisibility(View.VISIBLE);
                         textTV.setText(model.getText());
                         nameTV.setText(model.getUser());
+                        Log.d(TAG, "Name of user: " + model.getUser());
+                        backIV.setVisibility(View.VISIBLE);
                         if (model.getDownloadUrl() != null) {
                             String httpsString = model.getDownloadUrl();
                             downloadFile(httpsString, imagePV);
                             imagePV.setVisibility(View.VISIBLE);
-//                            textTVs.setText("HasUrl");
-//
-//                            AppBarLayout.LayoutParams layoutParams = (AppBarLayout.LayoutParams) imagePVs.getLayoutParams();
-//                            layoutParams.height = 1000;
-//                            layoutParams.width = 1000;
+
+                            imagePV.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    enlargeView(view);
+                                }
+                            });
                         }
                         else {
                             imagePV.setVisibility(View.INVISIBLE);
-//                            AppBarLayout.LayoutParams layoutParams = (AppBarLayout.LayoutParams) imagePV.getLayoutParams();
-//                            layoutParams.width = 1;
-//                            layoutParams.height = 1;
                         }
                         textTVs.setText("");
                         nameTVs.setText("");
+                        timeTVs.setText("");
                         imagePVs.setImageResource(R.drawable.empty_drawable);
-                        textTVs.setVisibility(View.INVISIBLE);
+//                        textTVs.setVisibility(View.INVISIBLE);
+                        backIVs.setImageResource(R.drawable.empty_drawable);
+                        backIVs.setVisibility(View.INVISIBLE);
                     }
                 } catch (Exception e) { // Name may be empty
                     textTV = v.findViewById(R.id.message);

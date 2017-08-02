@@ -56,7 +56,7 @@ public class Message {
         text = inText;
     }
 
-    public void setTime(long inTime) {
+    public void setMsgTime(long inTime) {
         time = inTime;
     }
 

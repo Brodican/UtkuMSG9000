@@ -87,7 +87,9 @@
         android:background="@color/com_facebook_button_border_color_focused"
         android:elevation="0dp"
         android:hint="@string/enter_message_hint"
-        android:inputType="text" />
+        android:inputType="text"
+        android:layout_alignRight="@+id/debug_sign_out"
+        android:layout_alignEnd="@+id/debug_sign_out" />
 
     <ProgressBar
         android:id="@+id/loading_messages_indicator"
@@ -101,6 +103,7 @@
         android:id="@+id/attach_file_button"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:paddingLeft="5dp"
         android:background="@android:drawable/ic_menu_upload"
         android:onClick="attachFile"
         android:layout_alignBaseline="@+id/text_input"

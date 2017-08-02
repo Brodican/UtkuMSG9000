@@ -1,6 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/authui_inputTextColorDark</item>
@@ -8,8 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColorPrimary">@color/common_google_signin_btn_text_dark_default</item>
         <item name="android:colorBackground">@color/background_material_light</item>
+        <item name="android:statusBarColor">?android:attr/detailsElementBackground</item>
         <item name="android:textColorPrimaryInverse">@color/tw__composer_red</item>
         <item name="android:textColorSecondaryInverse">@color/colorAccent</item>
     </style>
-
 </resources>
